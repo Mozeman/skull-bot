@@ -21,7 +21,7 @@ module.exports = {
                     const command = getCommand(requested_command);
                     embed = new Discord.RichEmbed()
                         .setTitle(client.user.username + " Help Manual")
-                        .setDescription("**Usage** :`" + command.usage.replace("{0}", client.prefix) + "`\n\n" + "__" + command.description + "__")
+                        .setDescription("**Usage** :`" + command.usage.replace("{prefix}", client.prefix) + "`\n\n" + "__" + command.description + "__")
                         .setFooter(`Type ${client.prefix}help <command> to see more about a command.`);
 
                     await message.channel.send(embed);
@@ -36,7 +36,7 @@ module.exports = {
         for (let [ cogName, cog ] of client.cogs) {
             embed = new Discord.RichEmbed()
                 .setColor(0x19bf0a)
-                .setTitle(`${cogName} Cog Commands`)
+                .setTitle(`${cog.name} Cog Commands`)
                 .setFooter(`Type ${prefix}help <command> to see more info about a specific command.`);
 
             if (cog.commands.size <= 0) {
@@ -44,10 +44,21 @@ module.exports = {
             }
 
             cog.commands.forEach((command, commandName) => {
-                if (message.member.hasPermission(command.permissions)) {
+                console.log(`CommandName : ${commandName}`);
+                if (command.hasOwnProperty("permissions")) {
+                    client.logger.debug(`Permissions checking : ${command.permissions}`);
+                    if (message.member.hasPermission(command.permissions)) {
+                        embed.addField(`${prefix}${commandName}`, command.description, false);
+                    }
+                } else {
+                    client.logger.debug(`Command has no permissions defined ${command.name}`);
                     embed.addField(`${prefix}${commandName}`, command.description, false);
                 }
             });
+            client.logger.debug(`Fields size ${embed.fields.size}. Cog : ${cogName}`);
+            if (embed.fields.size <= 0) {
+                continue;
+            }
             await message.channel.send(embed);
         }
     }
