@@ -104,3 +104,15 @@ dist
 .tern-port
 
 /config.json
+
+obj/
+
+.vs/
+
+SkullBot.vbproj.user
+
+SkullBot.vbproj
+
+run.txt
+
+NEW.sln
