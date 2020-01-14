@@ -1,0 +1,17 @@
+{
+  "name": "skull-bot",
+  "version": "1.0.0",
+  "description": "SkullOG Discord Bot",
+  "main": "../main.js",
+  "scripts": {
+    "test-error": "echo \"Error: no test specified\" && exit 1",
+    "test": "node .."
+  },
+  "keywords": [],
+  "author": "SkullOG, Mozeman",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^11.5.1",
+    "moment": "^2.24.0"
+  }
+}

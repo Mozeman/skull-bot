@@ -1,0 +1,6 @@
+
+fjavascript:UnusedVariable
+"5Remove the declaration of the unused 'date' variable.(½Ó•ƒûÿÿÿÿ8ÙÄ®ù-
+{javascript:S1117"S"date" hides or potentially hides a variable declared in an outer scope at line 10.(½Ó•ƒûÿÿÿÿ8ÙÄ®ù-
+_javascript:S1854
+"7Remove this useless assignment to local variable "date"(½Ó•ƒûÿÿÿÿ8ÙÄ®ù-
