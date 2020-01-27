@@ -2,12 +2,15 @@ const fs = require('fs');
 const Discord = require('discord.js');
 
 const {prefix, token, log_level} = require('./config.json');
-const settings = require('./settings.json');
 const message = require('./data/msg.json');
 const users_data = require('./data/users_data.json');
 
 const client = new Discord.Client();
 client.config = require('./config');
+
+client.settings = require('./settings.json');
+client.users_data = require('./data/users_data.json');
+
 client.commands = new Discord.Collection();
 client.cogs = new Discord.Collection();
 client.cogs.set("default", client.commands);

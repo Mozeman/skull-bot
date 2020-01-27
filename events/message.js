@@ -12,7 +12,7 @@ module.exports = (client, message) => {
     try {
         const command = getCommand(commandName);
         if (command == null) {
-            client.logger.error(`Command returned as null '${commandName}'`);
+            // client.logger.error(`Command returned as null '${commandName}'`);
             return;
         }
         //const command = client.commands.get(commandName);

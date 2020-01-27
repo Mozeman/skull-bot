@@ -1,5 +1,9 @@
 const {client} = require('./main.js');
 const fs = require('fs');
+const discord = require('discord.js');
+
+const settings = client.settings;
+const Users = client.users_data;
 
 const hasCommand = (name) => {
     let bool = false, cog_ = null;
@@ -22,7 +26,7 @@ module.exports = {
     save_settings() {
         fs.writeFile('settings.json', JSON.stringify(settings, null, 4), function (err) {
             if (err) console.log("Failed to save settings : " + err);
-            else console.log(`Saved settings!`);
+            else client.logger.log(`Saved settings!`);
         });
     },
 
@@ -61,7 +65,7 @@ module.exports = {
      * @returns {string} The setting value
      */
     getGuildSetting(guild, settingKey) {
-        guildSettings = (settings.hasOwnProperty(guild.id)) ? settings[guild.id] : null;
+        let guildSettings = (settings.hasOwnProperty(guild.id)) ? settings[guild.id] : null;
         if (guildSettings == null) return null;
 
         if (guildSettings.hasOwnProperty(settingKey)) {
@@ -74,12 +78,12 @@ module.exports = {
 
     setGuildSetting(guild, settingKey, settingValue) {
         if (guild == null || settingKey == null || settingValue == null) {
-            console.error(`Value is none. Guild : ${guild} settingKey : ${settingKey} settingValue : ${settingValue}`);
+            client.logger.error(`Value is none. Guild : ${guild} settingKey : ${settingKey} settingValue : ${settingValue}`);
             return false;
         }
-        guildSettings = (settings.hasOwnProperty(guild.id)) ? settings[guild.id] : null;
+        let guildSettings = (settings.hasOwnProperty(guild.id)) ? settings[guild.id] : null;
         if (guildSettings == null) {
-            console.error(`Guild not found in settings ${guild.name} (${guild.id})`)
+            client.logger.error(`Guild not found in settings ${guild.name} (${guild.id})`);
             return false;
         }
 
@@ -480,7 +484,13 @@ module.exports = {
         }
     },
 
+    /**
+     *
+     * @param guild : Guild
+     * @returns {{memberCount: number, members: [*], name: *}}
+     */
     getGuildDefaultSettings(guild) {
+        console.log(guild.members);
         return {
             "name": guild.name,
             "memberCount": guild.memberCount,
@@ -498,5 +508,5 @@ module.exports = {
       }
 
       return cog.commands.get(name);
-    }
+    },
 };
