@@ -105,6 +105,10 @@ dist
 
 /config.json
 
+/.idea
+
+/settings.json
+
 obj/
 
 .vs/
