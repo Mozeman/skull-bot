@@ -22,13 +22,15 @@ const hasCommand = (name) => {
     return [bool, cog_];
 };
 
+const save_settings = () => {
+    fs.writeFile('settings.json', JSON.stringify(settings, null, 4), function (err) {
+        if (err) console.log("Failed to save settings : " + err);
+        else client.logger.log(`Saved settings!`);
+    });
+};
+
 module.exports = {
-    save_settings() {
-        fs.writeFile('settings.json', JSON.stringify(settings, null, 4), function (err) {
-            if (err) console.log("Failed to save settings : " + err);
-            else client.logger.log(`Saved settings!`);
-        });
-    },
+    save_settings: save_settings,
 
     fromGuild(message) {
         return message.guild != null;
@@ -52,7 +54,7 @@ module.exports = {
         //console.log(Users);
 
         fs.writeFile("Users.json", JSON.stringify(Users, null, 4), function (err) {
-            if (err) console.log("Failed to save users : " + err)
+            if (err) console.log("Failed to save users : " + err);
             else console.log("Saved users!");
         });
     },
@@ -78,7 +80,7 @@ module.exports = {
 
     setGuildSetting(guild, settingKey, settingValue) {
         if (guild == null || settingKey == null || settingValue == null) {
-            client.logger.error(`Value is none. Guild : ${guild} settingKey : ${settingKey} settingValue : ${settingValue}`);
+            client.logger.error(`Value is none. Guild : ${guild.name} settingKey : ${settingKey} settingValue : ${settingValue}`);
             return false;
         }
         let guildSettings = (settings.hasOwnProperty(guild.id)) ? settings[guild.id] : null;
@@ -88,6 +90,7 @@ module.exports = {
         }
 
         guildSettings[settingKey] = settingValue;
+        client.logger.info(`Updated guildSetting. Guild : ${guild.name} settingKey : ${settingKey} settingValue : ${settingValue}`);
         save_settings();
         return true;
     },
@@ -96,10 +99,16 @@ module.exports = {
         return "```md\n" + msg + "```";
     },
 
+    /**
+     *
+     * @param {discord.Guild} guild
+     * @param {int} channel_id
+     * @returns {null, discord.TextChannel, discord.Snowflake}
+     */
     getChannel(guild, channel_id) {
         let foundChannel = null;
         guild.channels.array().forEach(function (channel) {
-            if (channel.id == channel_id) {
+            if (channel.id === channel_id || channel.name === channel_id) {
                 foundChannel = channel;
             }
         });
@@ -212,9 +221,9 @@ module.exports = {
             let reason = args[2];
 
             if (!reason)
-                reason = "No reason provided."
+                reason = "No reason provided.";
 
-            const date = new Date()
+            const date = new Date();
             console.log(`[${moment(date).format('DD-MM-Y hh:mm: A')}][${member.guild.name}] User ${member.user.tag} has been muted.`);
 
             if (modlogChannel == null) {
@@ -240,9 +249,9 @@ module.exports = {
             let reason = args[2];
 
             if (!reason)
-                reason = "No reason provided."
+                reason = "No reason provided.";
 
-            const date = new Date()
+            const date = new Date();
             console.log(`[${moment(date).format('DD-MM-Y hh:mm: A')}][${member.guild.name}] User ${member.user.tag} has been unmuted.`);
 
             if (modlogChannel == null) {
@@ -268,8 +277,8 @@ module.exports = {
             const admin = args[1];
             const reason = args[2];
 
-            const date = new Date()
-            console.log(`[${moment(date).format('DD-MM-Y hh:mm: A')}][${member.guild.name}] User ${member.user.tag} has been kicked.`)
+            const date = new Date();
+            console.log(`[${moment(date).format('DD-MM-Y hh:mm: A')}][${member.guild.name}] User ${member.user.tag} has been kicked.`);
 
             if (modlogChannel == null) {
                 console.log(`Failed to get moderation logging channel for guild (${guild.name}).`);
@@ -294,8 +303,8 @@ module.exports = {
             const admin = args[1];
             const reason = args[2];
 
-            const date = new Date()
-            console.log(`[${moment(date).format('DD-MM-Y hh:mm: A')}][${member.guild.name}] User ${member.user.tag} has been banned.`)
+            const date = new Date();
+            console.log(`[${moment(date).format('DD-MM-Y hh:mm: A')}][${member.guild.name}] User ${member.user.tag} has been banned.`);
 
             if (modlogChannel == null) {
                 console.log(`Failed to get moderation logging channel for guild (${guild.name}).`);
@@ -318,8 +327,8 @@ module.exports = {
         if (type == "messageDelete") {
             message = args[0];
 
-            const date = new Date()
-            console.log(`[${moment(date).format('DD-MM-Y hh:mm: A')}][${message.guild.name}] User ${message.author.tag}s message has been deleted`)
+            const date = new Date();
+            console.log(`[${moment(date).format('DD-MM-Y hh:mm: A')}][${message.guild.name}] User ${message.author.tag}s message has been deleted`);
 
             let msgContent = '';
 
@@ -385,7 +394,7 @@ module.exports = {
                 }
             };
             logChannel.send(embed);
-        };
+        }
 
         if (type === "guildMemberRemove") {
             leave = args[0];
@@ -406,7 +415,7 @@ module.exports = {
                         'text': `${moment(date).format('DD-MM-Y hh:mm:ss A')}`
                     }
                 }
-            }
+            };
             logChannel.send(embed);
         }
 
@@ -414,7 +423,7 @@ module.exports = {
             eold = args[0];
             enew = args[1];
 
-            const date = new Date()
+            const date = new Date();
             console.log(`[${moment(date).format('DD-MM-Y hh:mm: A')}][${eold.guild.name}] User ${eold.author.tag} has uptaded their message.`);
 
             const embed = {
@@ -490,7 +499,6 @@ module.exports = {
      * @returns {{memberCount: number, members: [*], name: *}}
      */
     getGuildDefaultSettings(guild) {
-        console.log(guild.members);
         return {
             "name": guild.name,
             "memberCount": guild.memberCount,

@@ -3,8 +3,6 @@ const Discord = require('discord.js');
 const {fromGuild, hasCommand} = require("../../functions.js");
 const perms = Discord.Permissions.FLAGS;
 
-const perms = Discord.Permissions.FLAGS;
-
 module.exports = {
     name: 'command',
     description: 'description',

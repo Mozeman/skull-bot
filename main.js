@@ -24,7 +24,7 @@ logger.log(`Logger initialized. Log Level : ${log_level}`);
 
 module.exports.client = client;
 
-
+// Load events
 const eventFiles = fs.readdirSync('./events').filter(f => f.endsWith('.js'));
 for (const file of eventFiles) {
     const event = require(`./events/${file}`);
@@ -34,6 +34,7 @@ for (const file of eventFiles) {
 }
 client.eventsCount = eventFiles.length;
 
+// Load commands
 const commandFiles = fs.readdirSync('./commands').filter(f => f.endsWith('.js') && !f.startsWith("_"));
 const cogDirs = fs.readdirSync('./commands', { withFileTypes: true })
     .filter(dirent => dirent.isDirectory())

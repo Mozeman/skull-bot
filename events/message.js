@@ -1,7 +1,8 @@
-const {getCommand} = require("../functions");
+const {getCommand, getGuildSetting} = require("../functions");
 
 module.exports = (client, message) => {
-    let prefix = client.prefix;
+    let guildPrefix = getGuildSetting(message.guild, "commandPrefix");
+    let prefix = (guildPrefix !== null) ? guildPrefix : client.prefix;
     if (!message.content.startsWith(prefix) || message.author.bot) return;
 
     const args = message.content.slice(prefix.length).split(/ +/);
